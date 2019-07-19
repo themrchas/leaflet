@@ -20,10 +20,28 @@ export class TestComponentComponent implements OnInit {
     console.log('Clicked on map with event \'e\' ',e);
   }
 
+  towerBridgeMessage(e:MouseWheelEvent) : void {
+    console.log('You just clikce don tower bridge');
+  }
+
+  extendedMessage(e: any) : void {
+    //console.log('this.options.color is'+ this.options.color);
+    console.log('color is'+ e.sourceTarget.options.color);
+  }
+
+
+
   ngOnInit() {
+
+    var extendedMarker = L.Marker.extend({
+      options: { color:""}
+     })
+     
 
     
      var tbOptions = { title: "Cool bridge"};
+
+     var greenichOptions = { title: "Cool city", color:"blue"};
 
     //Put markers on map individually
     //var london = L.marker([51.5, -0.09]).bindPopup('This is London').addTo(map), 
@@ -39,9 +57,15 @@ export class TestComponentComponent implements OnInit {
   westminsterAbbey = L.marker([51.492998028, -0.123166174]).bindPopup('This is Buckingham Palace in landmarks layer group'),
   towerBridge = L.marker([51.505153, -0.075664],tbOptions).bindPopup('This is Tower Brdige in landmarks layer group');
 
+  var testy = new extendedMarker([51.48135282895683, -0.005793571472167969],greenichOptions).bindPopup('This is TGreenwhich in South layer group');
+
+
+  towerBridge.on('click', this.towerBridgeMessage);
+  testy.on('click', this.extendedMessage);
+
   //Create layer groups
     var northCities = L.layerGroup([cityOfLondon, dalston]);
-    var southCities =  L.layerGroup([brixton, lewisham]);
+    var southCities =  L.layerGroup([brixton, lewisham, testy]);
     var landmarks = L.layerGroup([westminsterAbbey,towerBridge])
 
  
@@ -89,6 +113,8 @@ const map = L.map('map' , {
 
 L.control.layers(baseLayers, overLays).addTo(map);
 
+
+
 map.on('click',this.onMapClick);
 
 
@@ -124,3 +150,5 @@ var polygon = L.polygon([
 } 
 
 }
+
+
